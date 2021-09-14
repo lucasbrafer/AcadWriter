@@ -1,2 +1,2 @@
 # Frontend
-Frontend construido em React 
+Frontend React 
