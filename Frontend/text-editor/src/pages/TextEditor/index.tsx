@@ -1,20 +1,37 @@
 import React, { useEffect, useState } from 'react';
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+
+const formats = [
+  'header', 'font', 'size',
+  'bold', 'italic', 'underline', 'strike', 'blockquote',
+  'list', 'bullet', 'indent',
+  'link', 'image', 'video'
+]
+
+const modules = {
+  toolbar: [
+    [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+    [{size: []}],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{'list': 'ordered'}, {'list': 'bullet'}, 
+     {'indent': '-1'}, {'indent': '+1'}],
+    ['link', 'image', 'video'],
+    ['clean']
+  ],
+}
 
 const TextEditor = () => {
-  const [state, setstate] = useState('meu inicio')
+  const [content, setContent] = useState('')
 
-  useEffect(() => {
-    alert('O STATE MUDOU CRLHHHH!')
-  }, [state])
-
-  const changeName = () => {
-    setstate('EU MUDEI!')
+  const handleSetContent = (val: string) => {
+    console.log(content)
+    setContent(val)
   }
 
   return (
     <div>
-      <h1>{state}</h1>
-      <button onClick={changeName}>clickar</button>
+      <ReactQuill theme="snow" value={content} formats={formats} modules={modules} onChange={(val) => handleSetContent(val)} />
     </div>
   );
 }

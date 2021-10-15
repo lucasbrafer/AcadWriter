@@ -1,11 +1,11 @@
 import React from 'react';
-import TextEditor from './pages/TextEditor';
+import Editor from './pages/TextEditor';
 
 function App() {
   return (
     <div>
       <h1>hello!</h1>
-      <TextEditor />
+      <Editor />
     </div>
   );
 }
