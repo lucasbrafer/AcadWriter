@@ -1,3 +1,27 @@
 .border-toolbox {
   border: 1px solid #ccc;
 }
+
+.font {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 13px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.row > button {
+  background-color: transparent;
+  border: 0 none;
+}
+
+.row > input {
+  background-color: transparent;
+  border: 0 none;
+}
+
+.row > input:focus {
+  outline: none;
+}
