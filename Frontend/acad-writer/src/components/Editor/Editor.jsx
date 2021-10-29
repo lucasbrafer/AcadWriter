@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState, useRef} from "react";
 import ReactQuill from "react-quill";
 import EditorToolbar, { modules, formats } from "../EditorToolBar/EditorToolbar";
 import "./Editor.css";
@@ -7,23 +7,22 @@ import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.bubble.css";
 
 import { fetchResourses } from '../../service/index'
-import { debounceEvent } from '../../utils/index'
+import useDebounce from "../../utils/debounce";
 
 export const Editor = () => {
-  const [listSugestions, setListSugestions] = React.useState([])
-  const [state, setState] = React.useState(null)
+  const [listSugestions, setListSugestions] = useState([])
+  const [state, setState] = useState(null)
 
-  const fetchData = () => {
-    fetchResourses()
+  const fetchData = async () => {
+    const response = await fetchResourses().response
+    setListSugestions(response)
   }
 
-  const handleSugestion = (val) => {
-    val = debounceEvent(fetchResourses, 2000)
-  }
-
+  const [debouncedFunction] = useDebounce(fetchData, 1000);
+  
   const handleChange = (value) => {
-    const val = value;
-    setState(val);
+    debouncedFunction()
+    setState(value);
   };
 
   return (
