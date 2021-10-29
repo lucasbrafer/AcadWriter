@@ -18,7 +18,6 @@ import "@szhsin/react-menu/dist/index.css";
 
 export const Editor = () => {
   const [listSugestions, setListSugestions] = useState([]);
-  const [htmlString, setHtmlString] = useState("");
   const [state, setState] = useState(null);
 
   const [openMenu, setOpenMenu] = useState("closed");
@@ -27,7 +26,6 @@ export const Editor = () => {
   const handleChange = (value) => {
     debouncedFunction();
     setState(value);
-    setHtmlString(value);
   };
 
   const fetchData = async () => {
