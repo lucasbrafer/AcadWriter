@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import { renderToString } from "react-dom/server";
 import ReactQuill from "react-quill";
 import EditorToolbar, {
   modules,
@@ -18,12 +17,10 @@ import "@szhsin/react-menu/dist/index.css";
 
 export const Editor = () => {
   const [listSugestions, setListSugestions] = useState([]);
-  const [state, setState] = useState(null);
-  const [staticHTML, setStaticHTML] = useState("");
+  const [state, setState] = useState("");
   const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
 
   const [openMenu, setOpenMenu] = useState("closed");
-  const buttonRef = useRef(null);
   const divStaticRef = useRef(null);
 
   const handleChange = (value) => {
@@ -31,60 +28,83 @@ export const Editor = () => {
     setState(value);
   };
 
-  useEffect(() => {
-    const element = document.getElementById("static-html-editor");
-    console.log(element.innerHTML);
-
-    if (state && state[1] === "p") {
-      let newStr = state.slice(0, -4);
-      console.log(newStr);
-      element.innerHTML = newStr + '<span id="control-position"></span></p>';
-    }
-
-    const button = document.getElementById("control-position");
-
-    if (button) {
-      const offsets = button.getBoundingClientRect();
-      const AxisX = offsets.left;
-      const AxisY = offsets.top;
-      setAnchorPoint({ x: AxisX + 8, y: AxisY });
-    }
-  }, [state]);
-
   const fetchData = async () => {
     const response = await fetchResourses();
     setListSugestions(response);
     setOpenMenu("open");
   };
 
-  const [debouncedFunction] = useDebounce(fetchData, 100);
+  const [debouncedFunction] = useDebounce(fetchData, 3000);
+
+  function closeMenuOnType() {
+    setOpenMenu("closed");
+  }
+
+  useEffect(() => {
+    document.addEventListener("keydown", closeMenuOnType);
+  }, []);
+
+  useEffect(() => {
+    const processStringStaticEditor = () => {
+      const element = document.getElementById("static-html-editor");
+
+      let inverseTag = "";
+      let copyState = state;
+      let index = copyState.length - 1;
+
+      while (index >= 0 && copyState[index] !== "<") {
+        inverseTag = copyState[index] + inverseTag;
+        if (inverseTag) copyState = copyState.slice(0, -1);
+        index -= 1;
+      }
+      copyState = copyState.slice(0, -1);
+      inverseTag = "<" + inverseTag;
+
+      element.innerHTML =
+        copyState + '<span id="control-position"></span>' + inverseTag;
+    };
+
+    const processButonPosition = () => {
+      const button = document.getElementById("control-position");
+
+      if (button) {
+        const offsets = button.getBoundingClientRect();
+        const AxisX = offsets.left;
+        const AxisY = offsets.top;
+        setAnchorPoint({ x: AxisX + 8, y: AxisY });
+      }
+    };
+
+    if (state && state.length > 0) {
+      processStringStaticEditor();
+      processButonPosition();
+    }
+  }, [state, openMenu]);
 
   return (
     <div>
       <EditorToolbar />
-      <div>
+      <div style={{ display: openMenu === "open" ? "none" : "" }}>
         <ReactQuill
           theme="snow"
           value={state}
           onChange={(val) => handleChange(val)}
-          placeholder={"Write something awesome..."}
+          placeholder={""}
           modules={modules}
           formats={formats}
         />
       </div>
 
-      <div className="border-toolbox">
+      <div
+        className="border-toolbox"
+        style={{ display: openMenu === "open" ? "" : "none" }}
+      >
         <div
           id="static-html-editor"
           className="ql-editor font"
           ref={divStaticRef}
         ></div>
       </div>
-
-      {/* <button ref={buttonRef} onClick={() => setOpenMenu("open")}>
-          BTN
-        </button> */}
-      {/* style={{ display: openMenu === "open" ? "flex" : "none" }} */}
 
       <ControlledMenu
         anchorPoint={anchorPoint}
@@ -93,9 +113,8 @@ export const Editor = () => {
         onClose={() => setOpenMenu("closed")}
         key={"right"}
         direction={"right"}
-        align={"start"}
-        position={"anchor"}
-        viewScroll={"auto"}
+        align={"center"}
+        arrow={false}
       >
         {listSugestions.map((item) => (
           <MenuItem key={item}>{item}</MenuItem>

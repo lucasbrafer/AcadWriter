@@ -1,0 +1,13 @@
+body {
+  background-color: #f8f9fa;
+}
+
+.app-title {
+  margin-left: 1vw;
+  font-family: Roboto, sans-serif;
+}
+
+.container-editor {
+  margin: 0 1vw 0 1vw;
+  background-color: #ffffff;
+}
