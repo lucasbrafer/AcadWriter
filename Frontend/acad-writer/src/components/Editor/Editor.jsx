@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { renderToString } from "react-dom/server";
 import ReactQuill from "react-quill";
 import EditorToolbar, {
@@ -19,14 +19,37 @@ import "@szhsin/react-menu/dist/index.css";
 export const Editor = () => {
   const [listSugestions, setListSugestions] = useState([]);
   const [state, setState] = useState(null);
+  const [staticHTML, setStaticHTML] = useState("");
+  const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
 
   const [openMenu, setOpenMenu] = useState("closed");
   const buttonRef = useRef(null);
+  const divStaticRef = useRef(null);
 
   const handleChange = (value) => {
     debouncedFunction();
     setState(value);
   };
+
+  useEffect(() => {
+    const element = document.getElementById("static-html-editor");
+    console.log(element.innerHTML);
+
+    if (state && state[1] === "p") {
+      let newStr = state.slice(0, -4);
+      console.log(newStr);
+      element.innerHTML = newStr + '<span id="control-position"></span></p>';
+    }
+
+    const button = document.getElementById("control-position");
+
+    if (button) {
+      const offsets = button.getBoundingClientRect();
+      const AxisX = offsets.left;
+      const AxisY = offsets.top;
+      setAnchorPoint({ x: AxisX + 8, y: AxisY });
+    }
+  }, [state]);
 
   const fetchData = async () => {
     const response = await fetchResourses();
@@ -34,12 +57,12 @@ export const Editor = () => {
     setOpenMenu("open");
   };
 
-  const [debouncedFunction] = useDebounce(fetchData, 1000);
+  const [debouncedFunction] = useDebounce(fetchData, 100);
 
   return (
     <div>
       <EditorToolbar />
-      <div style={{ display: openMenu === "closed" ? "block" : "none" }}>
+      <div>
         <ReactQuill
           theme="snow"
           value={state}
@@ -50,35 +73,34 @@ export const Editor = () => {
         />
       </div>
 
-      <div
-        class="row border-toolbox"
-        style={{ display: openMenu === "open" ? "flex" : "none" }}
-      >
+      <div className="border-toolbox">
         <div
+          id="static-html-editor"
           className="ql-editor font"
-          dangerouslySetInnerHTML={{ __html: state }}
+          ref={divStaticRef}
         ></div>
-
-        <button ref={buttonRef} onClick={() => setOpenMenu("open")}></button>
-        <ControlledMenu
-          state={openMenu}
-          anchorRef={buttonRef}
-          onMouseLeave={() => setOpenMenu("closed")}
-          onClose={() => setOpenMenu("closed")}
-          key={"right"}
-          direction={"right"}
-          align={"start"}
-          position={"anchor"}
-          viewScroll={"auto"}
-          arrow={"arrow"}
-          offsetX={12}
-          offsetY={12}
-        >
-          {listSugestions.map((item) => (
-            <MenuItem key={item}>{item}</MenuItem>
-          ))}
-        </ControlledMenu>
       </div>
+
+      {/* <button ref={buttonRef} onClick={() => setOpenMenu("open")}>
+          BTN
+        </button> */}
+      {/* style={{ display: openMenu === "open" ? "flex" : "none" }} */}
+
+      <ControlledMenu
+        anchorPoint={anchorPoint}
+        state={openMenu}
+        onMouseLeave={() => setOpenMenu("closed")}
+        onClose={() => setOpenMenu("closed")}
+        key={"right"}
+        direction={"right"}
+        align={"start"}
+        position={"anchor"}
+        viewScroll={"auto"}
+      >
+        {listSugestions.map((item) => (
+          <MenuItem key={item}>{item}</MenuItem>
+        ))}
+      </ControlledMenu>
     </div>
   );
 };
