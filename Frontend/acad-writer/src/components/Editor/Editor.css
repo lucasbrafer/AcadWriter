@@ -6,3 +6,11 @@
   display: flex;
   flex-direction: row;
 }
+
+.szh-menu__arrow--dir-bottom {
+  top: 0.5rem !important;
+}
+
+.szh-menu__item {
+  background-color: #ffffff;
+}

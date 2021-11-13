@@ -40,6 +40,20 @@ export const Editor = () => {
     setOpenMenu("closed");
   }
 
+  const onEditorChange = (content, delta, source, editor) => {
+    debouncedFunction();
+    console.log("delta", delta);
+    console.log("content", content);
+    console.log("source", source);
+    console.log("editor", editor.getContents());
+    console.log("texto", editor.getText());
+    console.log("bound", editor.getBounds(0));
+    console.log("selection", editor.getSelection());
+    console.log(anchorPoint);
+    // console.log(editor.getBounds());
+    setState(content);
+  };
+
   useEffect(() => {
     document.addEventListener("keydown", closeMenuOnType);
   }, []);
@@ -71,7 +85,7 @@ export const Editor = () => {
         const offsets = button.getBoundingClientRect();
         const AxisX = offsets.left;
         const AxisY = offsets.top;
-        setAnchorPoint({ x: AxisX + 8, y: AxisY });
+        setAnchorPoint({ x: AxisX + 30, y: AxisY - 5 });
       }
     };
 
@@ -84,37 +98,35 @@ export const Editor = () => {
   return (
     <div>
       <EditorToolbar />
-      <div style={{ display: openMenu === "open" ? "none" : "" }}>
-        <ReactQuill
-          theme="snow"
-          value={state}
-          onChange={(val) => handleChange(val)}
-          placeholder={""}
-          modules={modules}
-          formats={formats}
-        />
-      </div>
+      <ReactQuill
+        style={{ display: openMenu === "open" ? "none" : "" }}
+        theme="snow"
+        value={state}
+        onChange={onEditorChange}
+        placeholder={""}
+        modules={modules}
+        formats={formats}
+      />
 
       <div
-        className="border-toolbox"
+        className="quill"
         style={{ display: openMenu === "open" ? "" : "none" }}
       >
-        <div
-          id="static-html-editor"
-          className="ql-editor font"
-          ref={divStaticRef}
-        ></div>
+        <div className="ql-container ql-snow">
+          <div
+            id="static-html-editor"
+            className="ql-editor"
+            ref={divStaticRef}
+          ></div>
+        </div>
       </div>
 
       <ControlledMenu
         anchorPoint={anchorPoint}
         state={openMenu}
-        onMouseLeave={() => setOpenMenu("closed")}
-        onClose={() => setOpenMenu("closed")}
-        key={"right"}
-        direction={"right"}
-        align={"center"}
-        arrow={false}
+        onMouseLeave={() => setOpenMenu("open")}
+        onClose={() => setOpenMenu("open")}
+        arrow={true}
       >
         {listSugestions.map((item) => (
           <MenuItem key={item}>{item}</MenuItem>
