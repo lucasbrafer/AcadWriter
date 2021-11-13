@@ -1,0 +1,10 @@
+.container-editor {
+  margin: 0 1vw 0 1vw;
+  background-color: #ffffff;
+}
+
+.app-title {
+  margin-left: 1vw;
+  font-family: Roboto, sans-serif;
+  color: #ffffff;
+}

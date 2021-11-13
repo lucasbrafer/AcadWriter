@@ -1,14 +1,19 @@
-import Editor from "./components/Editor/Editor";
+import React, { useState } from "react";
+
+import EditorPage from "./pages/EditorPage";
+import HomePage from "./pages/HomePage";
 
 import "./App.css";
 
 function App() {
+  const [homePage, setHomePage] = useState(true);
   return (
-    <div className="app">
-      <h1 className="app-title"> AcadWriter! </h1>
-      <div className="container-editor">
-        <Editor />
-      </div>
+    <div>
+      {homePage ? (
+        <HomePage nextPage={() => setHomePage(false)} />
+      ) : (
+        <EditorPage />
+      )}
     </div>
   );
 }
