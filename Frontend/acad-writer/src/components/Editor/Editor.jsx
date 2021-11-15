@@ -124,8 +124,8 @@ export const Editor = () => {
       <ControlledMenu
         anchorPoint={anchorPoint}
         state={openMenu}
-        onMouseLeave={() => setOpenMenu("open")}
-        onClose={() => setOpenMenu("open")}
+        onMouseLeave={() => setOpenMenu("closed")}
+        onClose={() => setOpenMenu("closed")}
         arrow={true}
       >
         {listSugestions.map((item) => (

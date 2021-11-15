@@ -1,4 +1,8 @@
+import React from "react";
+
 import Editor from "../../components/Editor/Editor";
+
+import "./EditorPage.css";
 
 function EditorPage() {
   return (
