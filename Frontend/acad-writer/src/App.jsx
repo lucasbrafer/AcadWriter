@@ -1,10 +1,19 @@
-import Editor from './components/Editor/Editor';
+import React, { useState } from "react";
+
+import EditorPage from "./pages/EditorPage";
+import HomePage from "./pages/HomePage";
+
+import "./App.css";
 
 function App() {
+  const [homePage, setHomePage] = useState(true);
   return (
-    <div className="App">
-      <h1> Hello world! </h1>
-      <Editor />
+    <div>
+      {homePage ? (
+        <HomePage nextPage={() => setHomePage(false)} />
+      ) : (
+        <EditorPage />
+      )}
     </div>
   );
 }

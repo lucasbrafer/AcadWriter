@@ -1,0 +1,34 @@
+#HomePage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.card {
+  margin-top: 10vh;
+  text-align: center;
+  width: 50%;
+  color: #ffffff;
+  margin-bottom: 10vh;
+}
+
+.card > div {
+  text-align: center;
+}
+
+.card > button {
+  margin-top: 30px;
+  border: 0 none;
+  background: #ffffff;
+  padding: 10px 30px 10px 30px;
+  border-radius: 5px;
+  color: #4688f4;
+  font-size: larger;
+  font-weight: bold;
+}
+
+.img-container {
+  background-color: #484d50;
+  width: 100%;
+}
