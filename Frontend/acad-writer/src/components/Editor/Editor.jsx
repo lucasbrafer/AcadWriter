@@ -183,6 +183,7 @@ export const Editor = () => {
         anchorPoint={anchorPoint}
         state={openMenu}
         onMouseLeave={() => handleCloseMenu()}
+        onClose={() => handleCloseMenu()}
         arrow={true}
       >
         {listSugestions.map((item) => (
