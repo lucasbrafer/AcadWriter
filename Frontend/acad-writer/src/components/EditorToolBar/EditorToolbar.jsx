@@ -39,7 +39,7 @@ Font.whitelist = [
   "courier-new",
   "georgia",
   "helvetica",
-  "lucida"
+  "lucida",
 ];
 Quill.register(Font, true);
 
@@ -48,14 +48,14 @@ export const modules = {
     container: "#toolbar",
     handlers: {
       undo: undoChange,
-      redo: redoChange
-    }
+      redo: redoChange,
+    },
   },
   history: {
     delay: 500,
     maxStack: 100,
-    userOnly: true
-  }
+    userOnly: true,
+  },
 };
 
 export const formats = [
@@ -76,7 +76,7 @@ export const formats = [
   "link",
   "image",
   "color",
-  "code-block"
+  "code-block",
 ];
 
 export const QuillToolbar = () => (
@@ -118,7 +118,6 @@ export const QuillToolbar = () => (
       <button className="ql-script" value="super" />
       <button className="ql-script" value="sub" />
       <button className="ql-blockquote" />
-      <button className="ql-direction" />
     </span>
     <span className="ql-formats">
       <select className="ql-align" />
@@ -128,12 +127,9 @@ export const QuillToolbar = () => (
     <span className="ql-formats">
       <button className="ql-link" />
       <button className="ql-image" />
-      <button className="ql-video" />
     </span>
     <span className="ql-formats">
-      <button className="ql-formula" />
       <button className="ql-code-block" />
-      <button className="ql-clean" />
     </span>
     <span className="ql-formats">
       <button className="ql-undo">

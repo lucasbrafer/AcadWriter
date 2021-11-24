@@ -57,74 +57,56 @@ export const Editor = () => {
   const fetchData = async () => {
     const sugestions = await fetchResourses();
     if (!!sugestions) {
-      setListSugestions(sugestions);
-      setOpenMenu("open");
+      const editor = quillRef.current.getEditor();
+      const position = editor.getSelection(true);
+      if (position.index > 0) {
+        setListSugestions(sugestions);
+        setOpenMenu("open");
+      }
     }
   };
 
   const [debouncedFunction] = useDebounce(fetchData, 1000);
 
   function closeMenuOnType(e) {
+    let key = "";
     if (e.keyCode >= 65 && e.keyCode <= 90 && openMenu === "open") {
-      const editor = quillRef.current.getEditor();
-      const position = editor.getSelection(true);
-      editor.insertText(position, e.key);
+      key = e.key;
     }
-    setOpenMenu("closed");
+    handleCloseMenu(key);
   }
 
   const handleSetSugestion = (item) => {
+    console.log("handleSet");
     let text = item;
-    const editor = quillRef.current.getEditor();
-    console.log(editor);
-    console.log("item", text);
 
+    const editor = quillRef.current.getEditor();
     const position = editor.getSelection(true);
 
-    if (editor.getText()[position - 1] !== " ") {
-      text = " " + text;
+    if (position && position.index > 0) {
+      if (item[item.length - 1].match(/[a-z]/i)) {
+        text = " " + text;
+      }
+      setTimeout(function () {
+        editor.insertText(editor.getLength() - 1, text);
+        handleCloseMenu();
+      }, 5);
     }
-
-    editor.insertText(position, text);
   };
 
   const onEditorChange = (content, delta, source, editor) => {
     debouncedFunction();
-    // console.log("delta", delta);
-    // console.log("content", content);
-    // console.log("source", source);
-    // console.log("editor", editor.getContents());
-    // console.log("texto", editor.getText());
-    // console.log("bound", editor.getBounds(7));
-    // console.log("selection", editor.getSelection());
-    // console.log("text", editor.getText());
-    // console.log(editor.getSelection().index);
-    // console.log(editor.getSelection(true).index);
-    // console.log(editor.getSelection(false).index);
-    // console.log(editor.getContents(editor.getSelection().index));
-    // console.log(anchorPoint);
-
-    // console.log("texto", editor.getText());
-    // console.log("text length", editor.getText().length);
-    // console.log("content", content);
-    // console.log("content length", content.length);
-    // console.log("getSelection().index ", editor.getSelection().index - 1);
-
-    // const textWithoutSpace = editor.getText().replaceAll(" ", "");
-
-    // console.log(
-    //   "nature text",
-    //   textWithoutSpace[editor.getSelection().index - 1]
-    // );
-
-    // const position =
-    //   editor.getSelection().index -
-    //   1 +
-    //   (content.length - textWithoutSpace.length - 3);
-
-    // console.log("tagged text", content[position]);
     editorRef.current = editor;
     setState({ content, editor });
+  };
+
+  const handleCloseMenu = (text = "") => {
+    const editor = quillRef.current.getEditor();
+    const position = editor.getSelection(true);
+    if (position && position.index > 0) {
+      setOpenMenu("closed");
+      editor.insertText(position.index, text);
+    }
   };
 
   useEffect(() => {
@@ -200,8 +182,7 @@ export const Editor = () => {
       <ControlledMenu
         anchorPoint={anchorPoint}
         state={openMenu}
-        onMouseLeave={() => setOpenMenu("closed")}
-        onClose={() => setOpenMenu("closed")}
+        onMouseLeave={() => handleCloseMenu()}
         arrow={true}
       >
         {listSugestions.map((item) => (
@@ -214,4 +195,4 @@ export const Editor = () => {
   );
 };
 
-export default Editor;
+export default React.memo(Editor);
