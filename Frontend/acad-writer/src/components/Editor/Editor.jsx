@@ -83,9 +83,11 @@ export const Editor = () => {
     const editor = quillRef.current.getEditor();
     const position = editor.getSelection(true);
 
+    const editorText = editor.getText();
+
     if (position && position.index > 0) {
       if (
-        item[item.length - 1] !== " " &&
+        editorText[position.index - 1] !== " " &&
         item[item.length - 1].match(/[a-z]/i)
       ) {
         text = " " + text;
