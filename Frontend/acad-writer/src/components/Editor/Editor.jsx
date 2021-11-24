@@ -185,7 +185,6 @@ export const Editor = () => {
       <ControlledMenu
         anchorPoint={anchorPoint}
         state={openMenu}
-        onMouseLeave={() => handleCloseMenu()}
         onClose={() => handleCloseMenu()}
         arrow={true}
       >
