@@ -38,7 +38,6 @@ export const Editor = () => {
     const text = await editorRef.current.getText();
 
     try {
-      await axios.get("http://127.0.0.1:5000/hello-world");
       const results = await axios.post(
         "http://127.0.0.1:5000/sugestion",
         {
