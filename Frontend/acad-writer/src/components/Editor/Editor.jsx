@@ -84,7 +84,10 @@ export const Editor = () => {
     const position = editor.getSelection(true);
 
     if (position && position.index > 0) {
-      if (item[item.length - 1].match(/[a-z]/i)) {
+      if (
+        item[item.length - 1] !== " " &&
+        item[item.length - 1].match(/[a-z]/i)
+      ) {
         text = " " + text;
       }
       setTimeout(function () {
