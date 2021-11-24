@@ -13,9 +13,9 @@ cors = CORS(app)
 def sugestions():
     text = request.get_json()['text']
     text = text.strip()
-    text = basicPreprocess(text)
+    processed_text = basicPreprocess(text)
 
-    results = fill_mask(text + " [MASK]")
+    results = fill_mask(processed_text + " [MASK]")
 
     words = [fill_mask.tokenizer.convert_ids_to_tokens(
         a["token"]) for a in list(results)]
@@ -28,6 +28,7 @@ def basicPreprocess(text):
     processed_text = re.sub(r"-\n", "", processed_text)
     processed_text = re.sub(r"\n", ' ', processed_text)
     processed_text = re.sub(r" +", " ", processed_text)
+    processed_text = processed_text[-512::]
     return processed_text
 
 
